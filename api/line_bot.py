@@ -14,14 +14,11 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
-        # 获取 X-Line-Signature 头
-        signature = self.headers['X-Line-Signature']
 
-        # 获取请求体
+        signature = self.headers['X-Line-Signature']
         content_length = int(self.headers['Content-Length'])
         body = self.rfile.read(content_length).decode('utf-8')
 
-        # 验证 Webhook 签名
         try:
             handler.handle(body, signature)
         except InvalidSignatureError:
@@ -29,23 +26,17 @@ class handler(BaseHTTPRequestHandler):
             self.end_headers()
             return
 
-        # 回复 HTTP 200
         self.send_response(200)
         self.end_headers()
 
     @handler.add(MessageEvent, message=TextMessage)
     def handle_message(event):
         user_message = event.message.text
-        
-        # 处理逻辑并返回结果
         response = execute_python_logic(user_message)
-        
-        # 回复用户
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=response)
         )
 
 def execute_python_logic(param):
-    # 实现您的 Python 逻辑，这里只是简单回传消息
-    return f"您传递的参数是：{param}"
+    return f"傳遞：{param}"
