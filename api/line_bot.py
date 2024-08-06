@@ -5,12 +5,6 @@ from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
-LINE_CHANNEL_ACCESS_TOKEN = os.environ['LINE_CHANNEL_ACCESS_TOKEN']
-LINE_CHANNEL_SECRET = os.environ['LINE_CHANNEL_SECRET']
-
-line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
-web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
-
 # from http.server import BaseHTTPRequestHandler
 
 # class handler(BaseHTTPRequestHandler):
@@ -22,18 +16,13 @@ web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 #         self.wfile.write('Hello, world!'.encode('utf-8'))
 #         return
 
-from http.server import BaseHTTPRequestHandler
-import os
-from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
-# 从环境变量获取 Line 的凭证
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
 LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 webhook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
+
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
