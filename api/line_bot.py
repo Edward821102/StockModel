@@ -63,7 +63,7 @@ LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 webhook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
-class RequestHandler(BaseHTTPRequestHandler):
+class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         signature = self.headers.get('X-Line-Signature')
         if not signature:
@@ -87,13 +87,19 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(500)
             self.end_headers()
 
-@webhook_handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
-    user_message = event.message.text
-    response = f"你傳了這是什麼鬼?{user_message}"
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-Type', 'text/plain; charset=utf-8')
+        self.end_headers()
+        self.wfile.write(b'Welcome Edward\'s Palace.')
 
-    # 发送回复消息
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=response)
-    )
+    @webhook_handler.add(MessageEvent, message=TextMessage)
+    def handle_message(event):
+        user_message = event.message.text
+        response = f"你傳了這是什麼鬼?{user_message}"
+
+        # 发送回复消息
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=response)
+        )
