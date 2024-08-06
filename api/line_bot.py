@@ -11,7 +11,7 @@ LINE_CHANNEL_SECRET = os.environ['LINE_CHANNEL_SECRET']
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 web_hook_handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
-from http.server import BaseHTTPRequestHandler
+# from http.server import BaseHTTPRequestHandler
 
 # class handler(BaseHTTPRequestHandler):
 
