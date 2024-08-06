@@ -1,0 +1,10 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "api/line_bot.py", "use": "@vercel/python" }
+    ],
+    "routes": [
+      { "src": "/.*", "dest": "/api/line_bot.py" }
+    ]
+  }
+  
