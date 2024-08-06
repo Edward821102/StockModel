@@ -1,0 +1,17 @@
+build/
+dist/
+stock_predictor.egg-info/
+__pycache__/
+.vercel
+*.log
+*.pyc
+__pycache__
+
+# Environments 
+.env 
+.venv 
+env/ 
+venv/
+ENV/ 
+env.bak/ 
+venv.bak/ 
