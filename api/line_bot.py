@@ -2,10 +2,10 @@ from http.server import BaseHTTPRequestHandler
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-from stock_model.fetch_twstock import WebCrawlerStockVolumes
-from stock_model.neuron import Neuron
-from twstock import Stock
 import os
+import twstock
+from typing import Dict
+
 
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
 LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
@@ -51,17 +51,20 @@ class handler(BaseHTTPRequestHandler):
             event.reply_token,
             TextSendMessage(text=response)
         )
+
+def get_close(message:str) -> str:
     
-def get_close(stock_id:str) -> str:
-    wcsv = WebCrawlerStockVolumes(stock_id)
-    vol = int(wcsv.get_volumes())
-    stock = Stock(stock_id)
-    data = stock.fetch_from(2018, 1)
-    ohlcv_list = [(i.open / 1000, i.high / 1000, i.low / 1000, i.close / 1000, i.capacity / (vol * 1000)) for i in data]
-    target_list = [i[3] for i in ohlcv_list]
-    train_samples = ohlcv_list[:-30]
-    train_targets = target_list[1:-29]
-    neuron = Neuron()
-    loss = neuron.train(train_samples, train_targets)
-    prediction = neuron.predict(ohlcv_list[-1])
-    return f"Loss:{loss}, 隔日收盤價:{prediction * 1000}"
+    def process(stock_realtime_info:Dict, price:str) -> str:
+        try:
+            return stock_realtime_info[price]
+        except:
+            return "暫無資料"
+
+    stock = twstock.realtime.get(message)
+    open  = process(stock['realtime'], "open")
+    high  = process(stock['realtime'], "high")
+    low   = process(stock['realtime'], "low")
+    close = process(stock['realtime'], "close")
+    
+    return f"開盤價:{open}, 最高價:{high}, 最低價:{low}, 收盤價:{close}"
+
