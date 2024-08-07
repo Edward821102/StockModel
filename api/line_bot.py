@@ -55,7 +55,7 @@ def get_close(message:str) -> str:
     
     def process(stock_realtime_info:Dict, price:str) -> str:
         try:
-            return stock_realtime_info[price]
+            return  round(float(stock_realtime_info[price]), 2)
         except:
             return "暫無資料"
 
@@ -63,6 +63,6 @@ def get_close(message:str) -> str:
     open  = process(stock['realtime'], "open")
     high  = process(stock['realtime'], "high")
     low   = process(stock['realtime'], "low")
-    close = process(stock['realtime'], "close")
+    close = process(stock['realtime'], "latest_trade_price")
     
     return f"開盤價:{open}, 最高價:{high}, 最低價:{low}, 收盤價:{close}"
