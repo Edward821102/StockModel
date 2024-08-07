@@ -6,6 +6,7 @@ __pycache__/
 *.log
 *.pyc
 __pycache__
+stock_model.egg-info/
 
 # Environments 
 .env 
