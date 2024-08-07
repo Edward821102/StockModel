@@ -45,13 +45,13 @@ class handler(BaseHTTPRequestHandler):
     @webhook_handler.add(MessageEvent, message=TextMessage)
     def handle_message(event):
         user_message = event.message.text
-        response = get_close(user_message)
+        response = get_price(user_message)
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=response)
         )
 
-def get_close(message:str) -> str:
+def get_price(message:str) -> str:
     
     def process(stock_realtime_info:Dict, price:str) -> str:
         try:
@@ -64,5 +64,7 @@ def get_close(message:str) -> str:
     high  = process(stock['realtime'], "high")
     low   = process(stock['realtime'], "low")
     close = process(stock['realtime'], "latest_trade_price")
-    
-    return f"開盤價:{open}, 最高價:{high}, 最低價:{low}, 收盤價:{close}"
+
+    name = stock['info']['name'] + stock['info']['code']
+    time = stock['info']['time'].split(' ')[0]
+    return f"時間:{time}, \n股票代號:{name}, \n開盤價:{open}, \n最高價:{high}, \n最低價:{low}, \n收盤價:{close}"
