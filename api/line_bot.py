@@ -6,6 +6,7 @@ import os
 import twstock
 from typing import Dict
 
+
 LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN')
 LINE_CHANNEL_SECRET = os.environ.get('LINE_CHANNEL_SECRET')
 
@@ -66,3 +67,4 @@ def get_close(message:str) -> str:
     close = process(stock['realtime'], "close")
     
     return f"開盤價:{open}, 最高價:{high}, 最低價:{low}, 收盤價:{close}"
+
