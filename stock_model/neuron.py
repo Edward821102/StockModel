@@ -1,13 +1,14 @@
 from pathlib import Path
+from typing import List
 import tensorflow as tf
 import random
 
 class Config:
 
     def __init__(self):
-        self.learning_rate              = 1e-5
+        self.learning_rate              = 1e-3
         self.convergence_error          = 1e-4
-        self.max_epoch                  = 10000
+        self.max_epoch                  = -1
         self.restore_dir                = ""
         self.save_dir                   = Path.home().joinpath('checkpoints', 'stock_predictor_weight')
     
@@ -43,8 +44,12 @@ class Neuron:
 
     def restore_weights(self) -> tf:
         self.weights = tf.saved_model.load(self.config.restore_dir)
-        
-    def predict(self, samples:list):
+
+    def predict(self, samples:List) -> List:
+        value = []
         samples_tensor = tf.constant(samples, dtype=tf.float32)
-        predictions = tf.reduce_sum(samples_tensor * self.weights)
-        return predictions.numpy()
+        predictions = tf.reduce_sum(samples_tensor * self.weights, axis=1)
+        for sample, prediction in zip(samples, predictions.numpy()):
+            # print(f"Sample: {sample}, Prediction: {prediction}")
+            value.append(prediction)
+        return value
